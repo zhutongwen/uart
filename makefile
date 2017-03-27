@@ -1,12 +1,15 @@
-﻿
 
-objects = main.o
+
+objects = main.o uart.o
 
 main.out : $(objects)
 	gcc	-Wall	-o	main.out	$(objects)
 
 main.o : main.c
-	gcc	-Wall 	-c 	main.c  # 这句由make 自动导出
+	gcc	-Wall 	-c 	main.c  
+	
+uart.o : uart.c
+	gcc	-Wall 	-c 	uart.c  
 
 clearn :
-	rm main.out	$(objects)
+	-rm main.out	$(objects)
