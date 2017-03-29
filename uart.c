@@ -61,13 +61,13 @@ int open_port(char *port)
 int uart_set(int fd,int baude,int c_flow,int bits,char parity,int stop)
 {
 	struct termios options;
-	/*获取终端属*/
+	/*获取终端��*/
 	if(tcgetattr(fd,&options) < 0)
 	{        
 		perror("tcgetattr error");
 		return -1;
 	}
-	/*设置输入输出波特率，两者保持一致*/
+	/*设置输入输出波特率，两者保持一��*/
 	switch(baude)
 	{
 		case 9600:
@@ -187,7 +187,7 @@ int uart_set(int fd,int baude,int c_flow,int bits,char parity,int stop)
 	 *ISIG：允许信��
 	 */
 
-	/*设置等待时间和最小接受字��*/
+	/*设置等待时间和最小接受字节数*/
 	options.c_cc[VTIME] = 0;//可以在select中设��
 	options.c_cc[VMIN] = 1;//最少读取一个字��
 
@@ -203,3 +203,34 @@ int uart_set(int fd,int baude,int c_flow,int bits,char parity,int stop)
 	return 0;
 }
 
+////////////////////////////////////////////////////////
+void uart_test(void)
+{
+	int fd;//: File descriptor for the port
+	int counter = 0;
+	char buffer[1000];
+	
+	fd = open_port("/dev/ttyUSB0");	
+	if(uart_set(fd,115200,0,8,'N',1) == -1)
+    {
+        fprintf(stderr,"uart set failed!\n");
+        exit(EXIT_FAILURE);
+    }
+	else
+	{
+		printf("uart_set ok!\n\n");
+	}
+	while(1)
+	{
+		int i=0;
+		counter = read(fd,buffer,1000);
+		printf("counter:%d\n",counter);
+		
+		for(i=0; i<counter; i++)
+		{
+			printf("%c ",buffer[i]);
+		}			
+		printf("\n\n\n");		
+		usleep(1000000);
+	}
+}
